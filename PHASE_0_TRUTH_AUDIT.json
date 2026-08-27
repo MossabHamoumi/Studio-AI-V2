@@ -1,0 +1,86 @@
+{
+  "phase": 0,
+  "phase_name": "Truthful Requirements + Architecture Baseline",
+  "status": "COMPLETED",
+  "phase_1_ready": true,
+  "repository": {
+    "name": "MossabHamoumi/Studio-AI",
+    "baseline_state": "CLEAN_EMPTY_REPO",
+    "branch": "rebuild/phase-0"
+  },
+  "environment": {
+    "python_version": "3.12",
+    "gui_framework": "PySide6",
+    "database": "SQLite3 (WAL Mode)",
+    "target_cpu": "AMD Ryzen 5 PRO 5650U",
+    "target_ram_gb": 16,
+    "max_heavy_concurrency": 1
+  },
+  "providers": {
+    "ai": {
+      "primary": "Ollama",
+      "default_model": "qwen3:8b",
+      "modes": ["AI_FULL", "AI_ASSISTED", "LOCAL_ONLY"]
+    },
+    "tts": {
+      "primary": "Kokoro-ONNX",
+      "fallback": "Piper-TTS",
+      "synthetic_tones_allowed": false
+    },
+    "rendering": {
+      "tool": "FFmpeg",
+      "analysis_tool": "FFprobe"
+    }
+  },
+  "content_types": [
+    "NOVEL",
+    "SHORT_STORY",
+    "ORIGINAL_STORY",
+    "HORROR_STORY",
+    "PHONE_CALL",
+    "DIALOGUE",
+    "REDDIT_STYLE",
+    "PODCAST",
+    "GAMEPLAY_STORY",
+    "CUSTOM"
+  ],
+  "output_types": [
+    "LONG_VIDEO",
+    "SHORT_REEL",
+    "AUDIO_ONLY"
+  ],
+  "visual_modes": [
+    "STATIC_IMAGE",
+    "MULTI_IMAGE",
+    "GAMEPLAY",
+    "MIXED",
+    "NONE"
+  ],
+  "ground_rules": [
+    "1. One phase at a time",
+    "2. No fake success",
+    "3. No silent fallback",
+    "4. Real System Doctor",
+    "5. User choices are authoritative",
+    "6. Source data is immutable",
+    "7. Durable state",
+    "8. Expensive operations must be resumable",
+    "9. CPU-first",
+    "10. Real verification"
+  ],
+  "roadmap": [
+    "Phase 0: Truthful Requirements + Architecture Baseline",
+    "Phase 1: Durable Core + Project Memory",
+    "Phase 2: Universal Content Engine",
+    "Phase 3: Local AI Layer",
+    "Phase 4: Real TTS + Narration",
+    "Phase 5: Subtitle Engine",
+    "Phase 6: Visual Engine",
+    "Phase 7: Hardened FFmpeg Render Pipeline",
+    "Phase 8: Production Orchestrator",
+    "Phase 9: Creative Desktop UI",
+    "Phase 10: Mandatory Windows Hardware Acceptance",
+    "Phase 11: SearXNG + Docker + Story Discovery",
+    "Phase 12: Metadata + Publishing + Analytics"
+  ]
+}
