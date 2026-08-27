@@ -1,6 +1,6 @@
 """System Doctor Diagnostic Tool.
 
-Performs honest, real health checks on foundational environment components.
+Performs honest, real health checks on foundational environment and Ollama AI components.
 """
 
 import os
@@ -10,16 +10,19 @@ from pathlib import Path
 from typing import Dict, Any
 from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
+from src.domain.ai_models import AIStatus
+from src.services.ai_provider import OllamaProvider
 
 
 class SystemDoctor:
-    """System Doctor diagnostic runner for foundation infrastructure."""
+    """System Doctor diagnostic runner for foundation infrastructure and local AI providers."""
 
     def __init__(self, settings: AppSettings):
         self.settings = settings
+        self.ollama_provider = OllamaProvider()
 
     def run_foundation_checks(self) -> Dict[str, Any]:
-        """Run diagnostic checks on Python, OS, CPU, RAM, SQLite, and storage."""
+        """Run diagnostic checks on Python, OS, CPU, RAM, SQLite, storage, and Ollama AI."""
         results: Dict[str, Any] = {}
 
         # 1. Python Environment Check
@@ -85,6 +88,15 @@ class SystemDoctor:
                 "write_permission": False,
                 "error": str(e),
             }
+
+        # 6. Real Ollama AI Health Verification
+        ollama_status = self.ollama_provider.check_health()
+        results["ollama_ai"] = {
+            "status": "OK" if ollama_status == AIStatus.AVAILABLE else "WARNING",
+            "ollama_status": ollama_status.value,
+            "endpoint": self.ollama_provider.base_url,
+            "default_model": self.ollama_provider.model,
+        }
 
         return results
 

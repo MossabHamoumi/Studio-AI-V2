@@ -15,11 +15,14 @@ from PySide6.QtWidgets import (
 from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
 from src.domain.models import Project
+from src.repositories.adaptation_repo import AdaptationRepository
+from src.repositories.analysis_repo import AnalysisRepository
 from src.repositories.chapter_repo import ChapterRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
 from src.repositories.source_repo import SourceRepository
 from src.services.workspace_manager import WorkspaceManager
+from src.ui.ai_view import AIView
 from src.ui.dashboard_view import DashboardView
 from src.ui.projects_view import ProjectsView
 from src.ui.workspace_view import WorkspaceView
@@ -48,6 +51,8 @@ class MainWindow(QMainWindow):
         source_repo: SourceRepository,
         chapter_repo: ChapterRepository,
         section_repo: SectionRepository,
+        analysis_repo: AnalysisRepository,
+        adaptation_repo: AdaptationRepository,
         workspace_mgr: WorkspaceManager,
     ):
         super().__init__()
@@ -57,6 +62,8 @@ class MainWindow(QMainWindow):
         self.source_repo = source_repo
         self.chapter_repo = chapter_repo
         self.section_repo = section_repo
+        self.analysis_repo = analysis_repo
+        self.adaptation_repo = adaptation_repo
         self.workspace_mgr = workspace_mgr
         self.active_project: Optional[Project] = None
 
@@ -84,6 +91,7 @@ class MainWindow(QMainWindow):
             "Projects",
             "Create",
             "Workspace",
+            "AI Director",
             "Production",
             "Library",
             "Settings",
@@ -103,14 +111,18 @@ class MainWindow(QMainWindow):
         self.workspace_view = WorkspaceView(
             self.source_repo, self.chapter_repo, self.section_repo
         )
+        self.ai_view = AIView(
+            self.analysis_repo, self.adaptation_repo, self.chapter_repo, self.settings
+        )
 
         self.content_stack.addWidget(self.dashboard_view)        # 0
         self.content_stack.addWidget(self.projects_view)         # 1
         self.content_stack.addWidget(PlaceholderView("Create Wizard")) # 2
         self.content_stack.addWidget(self.workspace_view)        # 3
-        self.content_stack.addWidget(PlaceholderView("Production Orchestrator")) # 4
-        self.content_stack.addWidget(PlaceholderView("Asset Library")) # 5
-        self.content_stack.addWidget(PlaceholderView("Settings"))      # 6
+        self.content_stack.addWidget(self.ai_view)               # 4
+        self.content_stack.addWidget(PlaceholderView("Production Orchestrator")) # 5
+        self.content_stack.addWidget(PlaceholderView("Asset Library")) # 6
+        self.content_stack.addWidget(PlaceholderView("Settings"))      # 7
 
         # Right Panel (Stack + Active Project Header)
         right_panel = QWidget()
@@ -138,3 +150,4 @@ class MainWindow(QMainWindow):
         )
         self.dashboard_view.refresh()
         self.workspace_view.set_active_project(project)
+        self.ai_view.set_active_project(project)

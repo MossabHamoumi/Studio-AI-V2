@@ -9,6 +9,8 @@ from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
 from src.database.migrations import MigrationRunner
 from src.domain.models import Project, ProjectType
+from src.repositories.adaptation_repo import AdaptationRepository
+from src.repositories.analysis_repo import AnalysisRepository
 from src.repositories.chapter_repo import ChapterRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
@@ -34,13 +36,24 @@ def test_main_window_launch_and_project_activation(qapp, tmp_path: Path):
     source_repo = SourceRepository(engine)
     chapter_repo = ChapterRepository(engine)
     section_repo = SectionRepository(engine)
+    analysis_repo = AnalysisRepository(engine)
+    adaptation_repo = AdaptationRepository(engine)
+
     ws_mgr = WorkspaceManager(settings)
 
     # Pre-create project
     project = proj_repo.save(Project(title="GUI Project", project_type=ProjectType.NOVEL))
 
     window = MainWindow(
-        settings, engine, proj_repo, source_repo, chapter_repo, section_repo, ws_mgr
+        settings,
+        engine,
+        proj_repo,
+        source_repo,
+        chapter_repo,
+        section_repo,
+        analysis_repo,
+        adaptation_repo,
+        ws_mgr,
     )
     window.show()
 

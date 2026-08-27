@@ -150,7 +150,60 @@ MIGRATIONS: List[Tuple[int, str, str]] = [
         CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
         CREATE INDEX IF NOT EXISTS idx_production_runs_project_id ON production_runs(project_id);
         """
-    )
+    ),
+    (
+        2,
+        "v2_ai_schema",
+        """
+        -- Analyses Table
+        CREATE TABLE IF NOT EXISTS analyses (
+            id TEXT PRIMARY KEY,
+            project_id TEXT NOT NULL,
+            chapter_id TEXT NOT NULL,
+            summary TEXT NOT NULL,
+            characters_json TEXT NOT NULL DEFAULT '[]',
+            character_details_json TEXT NOT NULL DEFAULT '{}',
+            locations_json TEXT NOT NULL DEFAULT '[]',
+            events_json TEXT NOT NULL DEFAULT '[]',
+            scenes_json TEXT NOT NULL DEFAULT '[]',
+            tone TEXT NOT NULL DEFAULT 'Neutral',
+            mood TEXT NOT NULL DEFAULT 'Dramatic',
+            themes_json TEXT NOT NULL DEFAULT '[]',
+            dialogue_json TEXT NOT NULL DEFAULT '[]',
+            narration_json TEXT NOT NULL DEFAULT '[]',
+            hooks_json TEXT NOT NULL DEFAULT '[]',
+            visual_opportunities_json TEXT NOT NULL DEFAULT '[]',
+            estimated_duration_seconds REAL NOT NULL DEFAULT 0.0,
+            analysis_type TEXT NOT NULL,
+            model_used TEXT NOT NULL,
+            source_text_hash TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+            FOREIGN KEY (chapter_id) REFERENCES chapters(id) ON DELETE CASCADE
+        );
+
+        -- Adaptations Table
+        CREATE TABLE IF NOT EXISTS adaptations (
+            id TEXT PRIMARY KEY,
+            project_id TEXT NOT NULL,
+            chapter_id TEXT NOT NULL,
+            adapted_text TEXT NOT NULL,
+            source_text_hash TEXT NOT NULL,
+            model_used TEXT NOT NULL,
+            status TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+            FOREIGN KEY (chapter_id) REFERENCES chapters(id) ON DELETE CASCADE
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_analyses_project_id ON analyses(project_id);
+        CREATE INDEX IF NOT EXISTS idx_analyses_chapter_id ON analyses(chapter_id);
+        CREATE INDEX IF NOT EXISTS idx_adaptations_project_id ON adaptations(project_id);
+        CREATE INDEX IF NOT EXISTS idx_adaptations_chapter_id ON adaptations(chapter_id);
+        CREATE INDEX IF NOT EXISTS idx_adaptations_status ON adaptations(status);
+        """
+    ),
 ]
 
 

@@ -6,6 +6,8 @@ from PySide6.QtWidgets import QApplication
 from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
 from src.database.migrations import MigrationRunner
+from src.repositories.adaptation_repo import AdaptationRepository
+from src.repositories.analysis_repo import AnalysisRepository
 from src.repositories.chapter_repo import ChapterRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
@@ -39,6 +41,8 @@ def main():
     source_repo = SourceRepository(engine)
     chapter_repo = ChapterRepository(engine)
     section_repo = SectionRepository(engine)
+    analysis_repo = AnalysisRepository(engine)
+    adaptation_repo = AdaptationRepository(engine)
 
     workspace_mgr = WorkspaceManager(settings)
 
@@ -49,6 +53,8 @@ def main():
         source_repo,
         chapter_repo,
         section_repo,
+        analysis_repo,
+        adaptation_repo,
         workspace_mgr,
     )
     window.show()

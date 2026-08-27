@@ -33,11 +33,11 @@ def test_migration_runner_idempotency(tmp_path: Path):
     # First migration run
     applied_first = migrator.apply_migrations()
     assert applied_first >= 1
-    assert migrator.get_current_version() == 1
+    assert migrator.get_current_version() == 2
 
     # Second migration run (idempotent)
     applied_second = migrator.apply_migrations()
     assert applied_second == 0
-    assert migrator.get_current_version() == 1
+    assert migrator.get_current_version() == 2
 
     engine.close()
