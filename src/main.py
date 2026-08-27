@@ -6,7 +6,10 @@ from PySide6.QtWidgets import QApplication
 from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
 from src.database.migrations import MigrationRunner
+from src.repositories.chapter_repo import ChapterRepository
 from src.repositories.project_repo import ProjectRepository
+from src.repositories.section_repo import SectionRepository
+from src.repositories.source_repo import SourceRepository
 from src.services.system_doctor import SystemDoctor
 from src.services.workspace_manager import WorkspaceManager
 from src.ui.main_window import MainWindow
@@ -33,9 +36,21 @@ def main():
     # Launch PySide6 Desktop GUI
     app = QApplication(sys.argv)
     project_repo = ProjectRepository(engine)
+    source_repo = SourceRepository(engine)
+    chapter_repo = ChapterRepository(engine)
+    section_repo = SectionRepository(engine)
+
     workspace_mgr = WorkspaceManager(settings)
 
-    window = MainWindow(settings, engine, project_repo, workspace_mgr)
+    window = MainWindow(
+        settings,
+        engine,
+        project_repo,
+        source_repo,
+        chapter_repo,
+        section_repo,
+        workspace_mgr,
+    )
     window.show()
 
     ret_code = app.exec()

@@ -34,13 +34,14 @@ python -m pytest -v
 - `SETUP.md`: Detailed installation and environment guide.
 - `PHASE_0_TRUTH_AUDIT.md`: Binding engineering specifications and truth audit.
 - `PHASE_1_RESULT.md`: Phase 1 implementation and test results.
+- `PHASE_2_RESULT.md`: Phase 2 Universal Content Engine implementation and test results.
 - `ARCHITECTURE.md`: Master pipeline and system design.
 
 ## Rebuild Roadmap
 
 1. **Phase 0:** Product Requirements & Architecture Baseline (COMPLETED)
 2. **Phase 1:** Durable Core + Project Memory (COMPLETED)
-3. **Phase 2:** Universal Content Engine (PLANNED)
+3. **Phase 2:** Universal Content Engine (COMPLETED)
 4. **Phase 3:** Local AI Layer (PLANNED)
 5. **Phase 4:** Real TTS + Narration (PLANNED)
 6. **Phase 5:** Subtitle Engine (PLANNED)

@@ -1,10 +1,10 @@
 # Studio-AI — Project Status
 
 **Repository:** `MossabHamoumi/Studio-AI`
-**Current Phase:** Phase 1 — Durable Core + Project Memory
+**Current Phase:** Phase 2 — Universal Content Engine
 **Phase Status:** COMPLETED
-**Phase 2 Readiness:** YES
-**Last Updated:** Phase 1 Completion
+**Phase 3 Readiness:** YES
+**Last Updated:** Phase 2 Completion
 
 ---
 
@@ -12,7 +12,7 @@
 
 Studio-AI is undergoing a clean, ground-up rebuild as a **local-first AI story and media production studio** targeting desktop environments (Windows / Ryzen 5 PRO 5650U / 16 GB RAM).
 
-Phase 1 has established the durable state backbone, SQLite WAL engine, versioned migrations, crash recovery mechanisms, repository layer, PySide6 desktop GUI shell, and test suite.
+Phase 2 has delivered the **Universal Content Engine**, featuring robust text file ingestion (UTF-8, BOM, UTF-16, CP1252), non-truncation verification, 9,000+ word regression test protection, Roman/Arabic chapter detection, sequence order isolation, duplicate/gap detection, front/back matter classification, deterministic cleaning, section & dialogue parsing, manual overrides, import reports, and the Content Workspace desktop UI view.
 
 ---
 
@@ -37,7 +37,7 @@ Phase 1 has established the durable state backbone, SQLite WAL engine, versioned
 |---|---|---|---|
 | **Phase 0** | Product Requirements & Architecture Baseline | **COMPLETED** | `PHASE_0_TRUTH_AUDIT.md`, `PHASE_0_TRUTH_AUDIT.json`, `STATUS.md`, `ARCHITECTURE.md`, `README.md` |
 | **Phase 1** | Durable Core + Project Memory | **COMPLETED** | SQLite WAL Engine, Migrations, Models, Repositories, GUI Shell, `PHASE_1_RESULT.md`, `SETUP.md` |
-| **Phase 2** | Universal Content Engine | PLANNED | Source Ingestion, Chapter/Section Splitter, Integrity Checks |
+| **Phase 2** | Universal Content Engine | **COMPLETED** | Text Importer, Chapter Detector, Cleaner, Section Splitter, Workspace View, 9k Word Test, `PHASE_2_RESULT.md` |
 | **Phase 3** | Local AI Layer | PLANNED | Ollama / qwen3:8b Integration, Schema Schemas, AI_TIMEOUT Handling |
 | **Phase 4** | Real TTS + Narration | PLANNED | Kokoro Primary + Piper Fallback, Audio Chunking, Cache, Validation |
 | **Phase 5** | Subtitle Engine | PLANNED | ASS/SRT Timing Alignment from Audio Duration, ASS \an5 Presets |
@@ -53,7 +53,7 @@ Phase 1 has established the durable state backbone, SQLite WAL engine, versioned
 
 ## 4. Current Repository State
 
-- **Branch:** `rebuild/phase-1`
-- **Source Code:** Core domain models, SQLite database engine, migrations, repositories, workspace manager, system doctor, PySide6 GUI shell, test suite.
-- **Test Suite Status:** 12 passed, 0 failed (`python -m pytest -v`).
-- **Next Action:** Await approval / start Phase 2 (Universal Content Engine).
+- **Branch:** `rebuild/phase-2`
+- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Content Workspace PySide6 UI, test suite.
+- **Test Suite Status:** 17 passed, 0 failed (`python3 -m pytest -v`).
+- **Next Action:** Await approval / start Phase 3 (Local AI Layer).

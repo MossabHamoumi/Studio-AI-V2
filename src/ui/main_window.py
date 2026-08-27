@@ -15,10 +15,14 @@ from PySide6.QtWidgets import (
 from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
 from src.domain.models import Project
+from src.repositories.chapter_repo import ChapterRepository
 from src.repositories.project_repo import ProjectRepository
+from src.repositories.section_repo import SectionRepository
+from src.repositories.source_repo import SourceRepository
 from src.services.workspace_manager import WorkspaceManager
 from src.ui.dashboard_view import DashboardView
 from src.ui.projects_view import ProjectsView
+from src.ui.workspace_view import WorkspaceView
 
 
 class PlaceholderView(QWidget):
@@ -41,12 +45,18 @@ class MainWindow(QMainWindow):
         settings: AppSettings,
         db_engine: DatabaseEngine,
         project_repo: ProjectRepository,
+        source_repo: SourceRepository,
+        chapter_repo: ChapterRepository,
+        section_repo: SectionRepository,
         workspace_mgr: WorkspaceManager,
     ):
         super().__init__()
         self.settings = settings
         self.db_engine = db_engine
         self.project_repo = project_repo
+        self.source_repo = source_repo
+        self.chapter_repo = chapter_repo
+        self.section_repo = section_repo
         self.workspace_mgr = workspace_mgr
         self.active_project: Optional[Project] = None
 
@@ -90,14 +100,17 @@ class MainWindow(QMainWindow):
         self.projects_view = ProjectsView(
             self.project_repo, self.workspace_mgr, self.on_project_activated
         )
+        self.workspace_view = WorkspaceView(
+            self.source_repo, self.chapter_repo, self.section_repo
+        )
 
-        self.content_stack.addWidget(self.dashboard_view)
-        self.content_stack.addWidget(self.projects_view)
-        self.content_stack.addWidget(PlaceholderView("Create Wizard"))
-        self.content_stack.addWidget(PlaceholderView("Workspace"))
-        self.content_stack.addWidget(PlaceholderView("Production Orchestrator"))
-        self.content_stack.addWidget(PlaceholderView("Asset Library"))
-        self.content_stack.addWidget(PlaceholderView("Settings"))
+        self.content_stack.addWidget(self.dashboard_view)        # 0
+        self.content_stack.addWidget(self.projects_view)         # 1
+        self.content_stack.addWidget(PlaceholderView("Create Wizard")) # 2
+        self.content_stack.addWidget(self.workspace_view)        # 3
+        self.content_stack.addWidget(PlaceholderView("Production Orchestrator")) # 4
+        self.content_stack.addWidget(PlaceholderView("Asset Library")) # 5
+        self.content_stack.addWidget(PlaceholderView("Settings"))      # 6
 
         # Right Panel (Stack + Active Project Header)
         right_panel = QWidget()
@@ -124,3 +137,4 @@ class MainWindow(QMainWindow):
             f"Active Project: {project.title} ({project.project_type.value})"
         )
         self.dashboard_view.refresh()
+        self.workspace_view.set_active_project(project)
