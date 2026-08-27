@@ -127,12 +127,14 @@ class AIDirector:
             self.analysis_logger.info(f"Successfully saved AI_RESULT analysis for chapter={chapter_id}")
             return analysis, AIStatus.AVAILABLE
         except Exception as e:
-            self.analysis_logger.error(f"Error during Ollama analysis for chapter={chapter_id}: {e}")
+            err_str = str(e).lower()
+            status = AIStatus.TIMEOUT if "timed out" in err_str else AIStatus.UNAVAILABLE
+            self.analysis_logger.error(f"Error during Ollama analysis ({status.value}) for chapter={chapter_id}: {e}")
             analysis = self.local_analyzer.analyze_story_locally(
                 project_id, chapter_id, chapter_text, source_text_hash
             )
             self.analysis_repo.save(analysis)
-            return analysis, AIStatus.TIMEOUT
+            return analysis, status
 
     def adapt_chapter_script(
         self,

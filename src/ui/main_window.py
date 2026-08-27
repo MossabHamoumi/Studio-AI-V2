@@ -24,6 +24,7 @@ from src.repositories.source_repo import SourceRepository
 from src.services.workspace_manager import WorkspaceManager
 from src.ui.ai_view import AIView
 from src.ui.dashboard_view import DashboardView
+from src.ui.library_view import LibraryView
 from src.ui.projects_view import ProjectsView
 from src.ui.workspace_view import WorkspaceView
 
@@ -114,6 +115,7 @@ class MainWindow(QMainWindow):
         self.ai_view = AIView(
             self.analysis_repo, self.adaptation_repo, self.chapter_repo, self.settings
         )
+        self.library_view = LibraryView(self.settings)
 
         self.content_stack.addWidget(self.dashboard_view)        # 0
         self.content_stack.addWidget(self.projects_view)         # 1
@@ -121,7 +123,7 @@ class MainWindow(QMainWindow):
         self.content_stack.addWidget(self.workspace_view)        # 3
         self.content_stack.addWidget(self.ai_view)               # 4
         self.content_stack.addWidget(PlaceholderView("Production Orchestrator")) # 5
-        self.content_stack.addWidget(PlaceholderView("Asset Library")) # 6
+        self.content_stack.addWidget(self.library_view)          # 6
         self.content_stack.addWidget(PlaceholderView("Settings"))      # 7
 
         # Right Panel (Stack + Active Project Header)

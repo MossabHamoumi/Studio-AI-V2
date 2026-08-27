@@ -1,6 +1,6 @@
 """System Doctor Diagnostic Tool.
 
-Performs honest, real health checks on foundational environment and Ollama AI components.
+Performs honest, real health checks on foundational environment, Ollama AI, and Kokoro/Piper TTS components.
 """
 
 import os
@@ -11,18 +11,22 @@ from typing import Dict, Any
 from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
 from src.domain.ai_models import AIStatus
+from src.providers.tts_kokoro import KokoroTTSProvider
+from src.providers.tts_piper import PiperTTSProvider
 from src.services.ai_provider import OllamaProvider
 
 
 class SystemDoctor:
-    """System Doctor diagnostic runner for foundation infrastructure and local AI providers."""
+    """System Doctor diagnostic runner for foundation infrastructure, local AI, and TTS providers."""
 
     def __init__(self, settings: AppSettings):
         self.settings = settings
         self.ollama_provider = OllamaProvider()
+        self.kokoro_provider = KokoroTTSProvider()
+        self.piper_provider = PiperTTSProvider()
 
     def run_foundation_checks(self) -> Dict[str, Any]:
-        """Run diagnostic checks on Python, OS, CPU, RAM, SQLite, storage, and Ollama AI."""
+        """Run diagnostic checks on Python, OS, CPU, RAM, SQLite, storage, Ollama AI, and TTS engines."""
         results: Dict[str, Any] = {}
 
         # 1. Python Environment Check
@@ -96,6 +100,24 @@ class SystemDoctor:
             "ollama_status": ollama_status.value,
             "endpoint": self.ollama_provider.base_url,
             "default_model": self.ollama_provider.model,
+        }
+
+        # 7. Real Kokoro TTS Engine Verification
+        kokoro_avail = self.kokoro_provider.is_available()
+        results["kokoro_tts"] = {
+            "status": "OK" if kokoro_avail else "WARNING",
+            "installed": kokoro_avail,
+            "engine": "kokoro-onnx",
+            "voices_count": len(self.kokoro_provider.list_voices()),
+        }
+
+        # 8. Real Piper TTS Engine Verification
+        piper_avail = self.piper_provider.is_available()
+        results["piper_tts"] = {
+            "status": "OK" if piper_avail else "WARNING",
+            "installed": piper_avail,
+            "engine": "piper-tts",
+            "voices_count": len(self.piper_provider.list_voices()),
         }
 
         return results
