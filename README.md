@@ -37,6 +37,7 @@ python -m pytest -v
 - `PHASE_2_RESULT.md`: Phase 2 Universal Content Engine implementation and test results.
 - `PHASE_3_RESULT.md`: Phase 3 Local AI Layer implementation and test results.
 - `PHASE_4_RESULT.md`: Phase 4 Real Local TTS & Narration Engine implementation and test results.
+- `PHASE_5_RESULT.md`: Phase 5 Audio-Driven Subtitle Engine implementation and test results.
 - `ARCHITECTURE.md`: Master pipeline and system design.
 
 ## Rebuild Roadmap
@@ -46,7 +47,7 @@ python -m pytest -v
 3. **Phase 2:** Universal Content Engine (COMPLETED)
 4. **Phase 3:** Local AI Layer (COMPLETED)
 5. **Phase 4:** Real TTS + Narration (COMPLETED)
-6. **Phase 5:** Subtitle Engine (PLANNED)
+6. **Phase 5:** Subtitle Engine (COMPLETED)
 7. **Phase 6:** Visual Engine (PLANNED)
 8. **Phase 7:** Hardened FFmpeg Render Pipeline (PLANNED)
 9. **Phase 8:** Production Orchestrator (PLANNED)

@@ -1,10 +1,10 @@
 # Studio-AI — Project Status
 
 **Repository:** `MossabHamoumi/Studio-AI`
-**Current Phase:** Phase 4 — Real Local TTS + Narration Engine
+**Current Phase:** Phase 5 — Audio-Driven Subtitle Engine
 **Phase Status:** COMPLETED
-**Phase 5 Readiness:** YES
-**Last Updated:** Phase 4 Completion
+**Phase 6 Readiness:** YES
+**Last Updated:** Phase 5 Completion
 
 ---
 
@@ -12,7 +12,7 @@
 
 Studio-AI is undergoing a clean, ground-up rebuild as a **local-first AI story and media production studio** targeting desktop environments (Windows / Ryzen 5 PRO 5650U / 16 GB RAM).
 
-Phase 4 has delivered the **Real Local TTS & Narration Engine**, featuring Kokoro primary (`kokoro-onnx`) and Piper fallback (`piper-tts`) neural TTS integrations, `Kokoro -> Piper -> FAILED` fallback chain, pure sine tone and silence audio validation (rejecting synthetic tones), natural paragraph/sentence chunking (~120–300 words), deterministic SHA-256 audio cache reuse, audio timeline assembly, `logs/tts.log` logging, System Doctor TTS engine probes, and the Voice Library desktop UI.
+Phase 5 has delivered the **Audio-Driven Subtitle Engine**, featuring direct audio-timeline timing alignment, dedicated subtitle validation (rejecting overlaps, negative times, duration bounds), word-boundary line wrapping, Gutenberg metadata filtering, narration-only Roman numeral normalization (`Chapter III` $\rightarrow$ `Chapter 3`), ASS v4.00+ generation with default `\an5` center-center alignment, preset style profiles (`SHORT_FORM`, `DEFAULT`, `MOBILE_LARGE`, etc.), standard SRT export, and the Subtitle Studio desktop UI.
 
 ---
 
@@ -40,7 +40,7 @@ Phase 4 has delivered the **Real Local TTS & Narration Engine**, featuring Kokor
 | **Phase 2** | Universal Content Engine | **COMPLETED** | Text Importer, Chapter Detector, Cleaner, Section Splitter, Workspace View, 9k Word Test, `PHASE_2_RESULT.md` |
 | **Phase 3** | Local AI Layer | **COMPLETED** | Ollama Client (`qwen3:8b`), AI Modes, Enum Safety, Timeout Banners, Adaptation Review, `PHASE_3_RESULT.md` |
 | **Phase 4** | Real TTS + Narration | **COMPLETED** | Kokoro Primary + Piper Fallback, Audio Validator, Chunker, Cache, Timeline, Voice Library, `PHASE_4_RESULT.md` |
-| **Phase 5** | Subtitle Engine | PLANNED | ASS/SRT Timing Alignment from Audio Duration, ASS \an5 Presets |
+| **Phase 5** | Subtitle Engine | **COMPLETED** | Audio Timeline Subtitles, SubtitleValidator, ASS \an5 Presets, SRT, Line Wrapper, `PHASE_5_RESULT.md` |
 | **Phase 6** | Visual Engine | PLANNED | Static Image, Gameplay Library Muted Audio, Multi-Image Scene Timeline |
 | **Phase 7** | Hardened FFmpeg Render Pipeline | PLANNED | RenderSpec, FilterGraph, FFmpegCommand, Media QA |
 | **Phase 8** | Production Orchestrator | PLANNED | Stage Pipeline, Resume/Retry Engine, Chapter Isolation |
@@ -53,7 +53,7 @@ Phase 4 has delivered the **Real Local TTS & Narration Engine**, featuring Kokor
 
 ## 4. Current Repository State
 
-- **Branch:** `rebuild/phase-4`
-- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, Voice Library PySide6 UI, test suite.
-- **Test Suite Status:** 28 passed, 0 failed (`python3 -m pytest -v`).
-- **Next Action:** Await approval / start Phase 5 (Subtitle Engine).
+- **Branch:** `rebuild/phase-5`
+- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, PySide6 UI views, test suite.
+- **Test Suite Status:** 33 passed, 0 failed (`python3 -m pytest -v`).
+- **Next Action:** Await approval / start Phase 6 (Visual Engine).

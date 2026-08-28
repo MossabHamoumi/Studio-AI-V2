@@ -26,6 +26,7 @@ from src.ui.ai_view import AIView
 from src.ui.dashboard_view import DashboardView
 from src.ui.library_view import LibraryView
 from src.ui.projects_view import ProjectsView
+from src.ui.subtitle_view import SubtitleView
 from src.ui.workspace_view import WorkspaceView
 
 
@@ -93,6 +94,7 @@ class MainWindow(QMainWindow):
             "Create",
             "Workspace",
             "AI Director",
+            "Subtitles",
             "Production",
             "Library",
             "Settings",
@@ -115,6 +117,7 @@ class MainWindow(QMainWindow):
         self.ai_view = AIView(
             self.analysis_repo, self.adaptation_repo, self.chapter_repo, self.settings
         )
+        self.subtitle_view = SubtitleView(self.chapter_repo, self.settings)
         self.library_view = LibraryView(self.settings)
 
         self.content_stack.addWidget(self.dashboard_view)        # 0
@@ -122,9 +125,10 @@ class MainWindow(QMainWindow):
         self.content_stack.addWidget(PlaceholderView("Create Wizard")) # 2
         self.content_stack.addWidget(self.workspace_view)        # 3
         self.content_stack.addWidget(self.ai_view)               # 4
-        self.content_stack.addWidget(PlaceholderView("Production Orchestrator")) # 5
-        self.content_stack.addWidget(self.library_view)          # 6
-        self.content_stack.addWidget(PlaceholderView("Settings"))      # 7
+        self.content_stack.addWidget(self.subtitle_view)         # 5
+        self.content_stack.addWidget(PlaceholderView("Production Orchestrator")) # 6
+        self.content_stack.addWidget(self.library_view)          # 7
+        self.content_stack.addWidget(PlaceholderView("Settings"))      # 8
 
         # Right Panel (Stack + Active Project Header)
         right_panel = QWidget()
@@ -153,3 +157,4 @@ class MainWindow(QMainWindow):
         self.dashboard_view.refresh()
         self.workspace_view.set_active_project(project)
         self.ai_view.set_active_project(project)
+        self.subtitle_view.set_active_project(project)
