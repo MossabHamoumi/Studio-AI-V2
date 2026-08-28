@@ -1,10 +1,10 @@
 """Content Workspace View for PySide6.
 
 Displays imported sources, text statistics, chapter structure, original vs cleaned text,
-manual edits, and import reports.
+manual edits, and stage navigation controls.
 """
 
-from typing import Optional
+from typing import Callable, Optional
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFileDialog,
@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from src.domain.models import Chapter, Project, Source
+from src.domain.session_context import SessionContext
 from src.repositories.chapter_repo import ChapterRepository
 from src.repositories.section_repo import SectionRepository
 from src.repositories.source_repo import SourceRepository
@@ -33,16 +34,22 @@ class WorkspaceView(QWidget):
     """Content Workspace View for managing story text, chapters, and cleaning."""
 
     def __init__(
+
         self,
         source_repo: SourceRepository,
         chapter_repo: ChapterRepository,
         section_repo: SectionRepository,
+        session_ctx: SessionContext,
+        on_navigate_stage: Optional[Callable[[int], None]] = None,
         parent=None,
     ):
         super().__init__(parent)
         self.source_repo = source_repo
         self.chapter_repo = chapter_repo
         self.section_repo = section_repo
+        self.session_ctx = session_ctx
+        self.on_navigate_stage = on_navigate_stage
+
         self.content_engine = ContentEngine(source_repo, chapter_repo, section_repo)
 
         self.active_project: Optional[Project] = None
@@ -126,6 +133,13 @@ class WorkspaceView(QWidget):
         text_splitter.addWidget(clean_box)
 
         right_layout.addWidget(text_splitter)
+
+        # Stage Navigation Button [ CONTINUE TO AI DIRECTOR ]
+        btn_next_stage = QPushButton("CONTINUE TO AI DIRECTOR →")
+        btn_next_stage.setStyleSheet("background-color: #0d47a1; color: white; font-weight: bold; padding: 10px; font-size: 14px;")
+        btn_next_stage.clicked.connect(self.handle_continue_ai)
+        right_layout.addWidget(btn_next_stage)
+
         splitter.addWidget(right_widget)
 
         layout.addWidget(splitter)
@@ -172,6 +186,7 @@ class WorkspaceView(QWidget):
 
     def display_chapter(self, chapter: Chapter):
         self.active_chapter = chapter
+        self.session_ctx.set_active_chapter(chapter.id)
         self.txt_edit_cnum.setText(str(chapter.chapter_number))
         self.txt_edit_title.setText(chapter.title)
         self.txt_original.setPlainText(chapter.original_text)
@@ -207,3 +222,7 @@ class WorkspaceView(QWidget):
         if file_path:
             self.content_engine.process_file_source(self.active_project.id, file_path)
             self.reload_workspace()
+
+    def handle_continue_ai(self):
+        if self.on_navigate_stage:
+            self.on_navigate_stage(4)  # Index 4 is AI Director

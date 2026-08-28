@@ -10,3 +10,4 @@ logs/
 .venv/
 dist/
 build/
+*.log

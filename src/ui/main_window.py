@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 from src.config.settings import AppSettings
 from src.database.engine import DatabaseEngine
 from src.domain.models import Project
+from src.domain.session_context import SessionContext
 from src.repositories.adaptation_repo import AdaptationRepository
 from src.repositories.analysis_repo import AnalysisRepository
 from src.repositories.asset_repo import AssetRepository
@@ -24,8 +25,10 @@ from src.repositories.production_run_repo import ProductionRunRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
 from src.repositories.source_repo import SourceRepository
+from src.services.production_orchestrator import ProductionOrchestrator
 from src.services.workspace_manager import WorkspaceManager
 from src.ui.ai_view import AIView
+from src.ui.create_wizard_view import CreateWizardView
 from src.ui.dashboard_view import DashboardView
 from src.ui.library_view import LibraryView
 from src.ui.production_view import ProductionView
@@ -78,12 +81,30 @@ class MainWindow(QMainWindow):
         self.job_repo = job_repo
         self.run_repo = production_run_repo
         self.workspace_mgr = workspace_mgr
+
+        self.session_ctx = SessionContext()
+        self.orchestrator = ProductionOrchestrator(
+            project_repo,
+            source_repo,
+            chapter_repo,
+            analysis_repo,
+            adaptation_repo,
+            asset_repo,
+            job_repo,
+            production_run_repo,
+            settings,
+        )
         self.active_project: Optional[Project] = None
 
         self.setWindowTitle("Studio-AI Desktop Studio")
         self.resize(1100, 700)
 
         self.init_ui()
+
+    def navigate_to_stage(self, stage_index: int):
+        """Navigate content stack to a specified stage index."""
+        if 0 <= stage_index < self.nav_list.count():
+            self.nav_list.setCurrentRow(stage_index)
 
     def init_ui(self):
         main_widget = QWidget()
@@ -123,8 +144,23 @@ class MainWindow(QMainWindow):
         self.projects_view = ProjectsView(
             self.project_repo, self.workspace_mgr, self.on_project_activated
         )
+        self.create_wizard_view = CreateWizardView(
+            self.session_ctx,
+            self.project_repo,
+            self.source_repo,
+            self.chapter_repo,
+            self.section_repo,
+            self.workspace_mgr,
+            self.orchestrator,
+            self.settings,
+            on_navigate_stage=self.navigate_to_stage,
+        )
         self.workspace_view = WorkspaceView(
-            self.source_repo, self.chapter_repo, self.section_repo
+            self.source_repo,
+            self.chapter_repo,
+            self.section_repo,
+            self.session_ctx,
+            on_navigate_stage=self.navigate_to_stage,
         )
         self.ai_view = AIView(
             self.analysis_repo, self.adaptation_repo, self.chapter_repo, self.settings
@@ -146,7 +182,7 @@ class MainWindow(QMainWindow):
 
         self.content_stack.addWidget(self.dashboard_view)        # 0
         self.content_stack.addWidget(self.projects_view)         # 1
-        self.content_stack.addWidget(PlaceholderView("Create Wizard")) # 2
+        self.content_stack.addWidget(self.create_wizard_view)    # 2
         self.content_stack.addWidget(self.workspace_view)        # 3
         self.content_stack.addWidget(self.ai_view)               # 4
         self.content_stack.addWidget(self.subtitle_view)         # 5
@@ -176,6 +212,7 @@ class MainWindow(QMainWindow):
     def on_project_activated(self, project: Project):
         """Handle project selection/activation."""
         self.active_project = project
+        self.session_ctx.set_active_project(project.id)
         self.lbl_active_project.setText(
             f"Active Project: {project.title} ({project.project_type.value})"
         )
