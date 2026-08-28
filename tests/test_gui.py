@@ -11,6 +11,7 @@ from src.database.migrations import MigrationRunner
 from src.domain.models import Project, ProjectType
 from src.repositories.adaptation_repo import AdaptationRepository
 from src.repositories.analysis_repo import AnalysisRepository
+from src.repositories.asset_repo import AssetRepository
 from src.repositories.chapter_repo import ChapterRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
@@ -38,6 +39,7 @@ def test_main_window_launch_and_project_activation(qapp, tmp_path: Path):
     section_repo = SectionRepository(engine)
     analysis_repo = AnalysisRepository(engine)
     adaptation_repo = AdaptationRepository(engine)
+    asset_repo = AssetRepository(engine)
 
     ws_mgr = WorkspaceManager(settings)
 
@@ -53,6 +55,7 @@ def test_main_window_launch_and_project_activation(qapp, tmp_path: Path):
         section_repo,
         analysis_repo,
         adaptation_repo,
+        asset_repo,
         ws_mgr,
     )
     window.show()

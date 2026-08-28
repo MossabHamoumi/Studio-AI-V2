@@ -1,10 +1,10 @@
 # Studio-AI — Project Status
 
 **Repository:** `MossabHamoumi/Studio-AI`
-**Current Phase:** Phase 5 — Audio-Driven Subtitle Engine
+**Current Phase:** Phase 6 — Visual Engine + Local Asset Library
 **Phase Status:** COMPLETED
-**Phase 6 Readiness:** YES
-**Last Updated:** Phase 5 Completion
+**Phase 7 Readiness:** YES
+**Last Updated:** Phase 6 Completion
 
 ---
 
@@ -12,7 +12,7 @@
 
 Studio-AI is undergoing a clean, ground-up rebuild as a **local-first AI story and media production studio** targeting desktop environments (Windows / Ryzen 5 PRO 5650U / 16 GB RAM).
 
-Phase 5 has delivered the **Audio-Driven Subtitle Engine**, featuring direct audio-timeline timing alignment, dedicated subtitle validation (rejecting overlaps, negative times, duration bounds), word-boundary line wrapping, Gutenberg metadata filtering, narration-only Roman numeral normalization (`Chapter III` $\rightarrow$ `Chapter 3`), ASS v4.00+ generation with default `\an5` center-center alignment, preset style profiles (`SHORT_FORM`, `DEFAULT`, `MOBILE_LARGE`, etc.), standard SRT export, and the Subtitle Studio desktop UI.
+Phase 6 has delivered the **Visual Engine & Local Asset Library**, featuring visual mode selection (`STATIC_IMAGE`, `MULTI_IMAGE`, `GAMEPLAY`, `MIXED`, `NONE`), format profile specifications (`16:9`, `9:16`, `1:1`), FFprobe media metadata extraction, missing asset recovery without crashing (`MISSING`), static image scaling & motion effects, editable AI image prompt generation, multi-image segment transitions, gameplay video looping calculations (with muted audio by default), title card specifications, and the Visual Studio desktop UI.
 
 ---
 
@@ -41,7 +41,7 @@ Phase 5 has delivered the **Audio-Driven Subtitle Engine**, featuring direct aud
 | **Phase 3** | Local AI Layer | **COMPLETED** | Ollama Client (`qwen3:8b`), AI Modes, Enum Safety, Timeout Banners, Adaptation Review, `PHASE_3_RESULT.md` |
 | **Phase 4** | Real TTS + Narration | **COMPLETED** | Kokoro Primary + Piper Fallback, Audio Validator, Chunker, Cache, Timeline, Voice Library, `PHASE_4_RESULT.md` |
 | **Phase 5** | Subtitle Engine | **COMPLETED** | Audio Timeline Subtitles, SubtitleValidator, ASS \an5 Presets, SRT, Line Wrapper, `PHASE_5_RESULT.md` |
-| **Phase 6** | Visual Engine | PLANNED | Static Image, Gameplay Library Muted Audio, Multi-Image Scene Timeline |
+| **Phase 6** | Visual Engine | **COMPLETED** | Visual Modes, FFprobe Inspector, Asset Library, Gameplay Looping, Image Prompts, Title Cards, `PHASE_6_RESULT.md` |
 | **Phase 7** | Hardened FFmpeg Render Pipeline | PLANNED | RenderSpec, FilterGraph, FFmpegCommand, Media QA |
 | **Phase 8** | Production Orchestrator | PLANNED | Stage Pipeline, Resume/Retry Engine, Chapter Isolation |
 | **Phase 9** | Creative Desktop UI | PLANNED | PySide6 Studio UI (Dashboard, Projects, Create, Workspace, Production, Library, Settings) |
@@ -53,7 +53,7 @@ Phase 5 has delivered the **Audio-Driven Subtitle Engine**, featuring direct aud
 
 ## 4. Current Repository State
 
-- **Branch:** `rebuild/phase-5`
-- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, PySide6 UI views, test suite.
-- **Test Suite Status:** 33 passed, 0 failed (`python3 -m pytest -v`).
-- **Next Action:** Await approval / start Phase 6 (Visual Engine).
+- **Branch:** `rebuild/phase-6`
+- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, visual engine & asset library, PySide6 UI views, test suite.
+- **Test Suite Status:** 37 passed, 0 failed (`python3 -m pytest -v`).
+- **Next Action:** Await approval / start Phase 7 (Hardened FFmpeg Render Pipeline).

@@ -14,22 +14,8 @@ class AssetRepository:
     def __init__(self, db_engine: DatabaseEngine):
         self.db = db_engine
 
-    def register_asset(self, asset: Asset) -> Asset:
-        """Register and validate an asset file.
-
-        Verifies that file exists on disk and size > 0 before registration.
-        """
-        file_path = Path(asset.path)
-        if not file_path.exists():
-            raise AssetNotFoundError(f"Asset path '{asset.path}' does not exist on disk.")
-
-        file_size = file_path.stat().st_size
-        if file_size <= 0:
-            raise ValidationError(f"Asset file '{asset.path}' is empty (size <= 0 bytes).")
-
-        asset.size_bytes = file_size
-        asset.status = AssetStatus.VALIDATED
-
+    def save(self, asset: Asset) -> Asset:
+        """Save or update asset entity directly without file existence checks."""
         conn = self.db.get_connection()
         try:
             with conn:
@@ -61,7 +47,25 @@ class AssetRepository:
                 )
             return asset
         except Exception as e:
-            raise DatabaseError(f"Failed to register asset {asset.id}: {e}") from e
+            raise DatabaseError(f"Failed to save asset {asset.id}: {e}") from e
+
+    def register_asset(self, asset: Asset) -> Asset:
+        """Register and validate an asset file.
+
+        Verifies that file exists on disk and size > 0 before registration.
+        """
+        file_path = Path(asset.path)
+        if not file_path.exists():
+            raise AssetNotFoundError(f"Asset path '{asset.path}' does not exist on disk.")
+
+        file_size = file_path.stat().st_size
+        if file_size <= 0:
+            raise ValidationError(f"Asset file '{asset.path}' is empty (size <= 0 bytes).")
+
+        asset.size_bytes = file_size
+        asset.status = AssetStatus.VALIDATED
+
+        return self.save(asset)
 
     def get_by_id(self, asset_id: str) -> Asset:
         """Get asset by ID."""
