@@ -19,6 +19,8 @@ from src.repositories.adaptation_repo import AdaptationRepository
 from src.repositories.analysis_repo import AnalysisRepository
 from src.repositories.asset_repo import AssetRepository
 from src.repositories.chapter_repo import ChapterRepository
+from src.repositories.job_repo import JobRepository
+from src.repositories.production_run_repo import ProductionRunRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
 from src.repositories.source_repo import SourceRepository
@@ -59,6 +61,8 @@ class MainWindow(QMainWindow):
         analysis_repo: AnalysisRepository,
         adaptation_repo: AdaptationRepository,
         asset_repo: AssetRepository,
+        job_repo: JobRepository,
+        production_run_repo: ProductionRunRepository,
         workspace_mgr: WorkspaceManager,
     ):
         super().__init__()
@@ -71,6 +75,8 @@ class MainWindow(QMainWindow):
         self.analysis_repo = analysis_repo
         self.adaptation_repo = adaptation_repo
         self.asset_repo = asset_repo
+        self.job_repo = job_repo
+        self.run_repo = production_run_repo
         self.workspace_mgr = workspace_mgr
         self.active_project: Optional[Project] = None
 
@@ -125,7 +131,17 @@ class MainWindow(QMainWindow):
         )
         self.subtitle_view = SubtitleView(self.chapter_repo, self.settings)
         self.visual_view = VisualView(self.asset_repo, self.chapter_repo, self.settings)
-        self.production_view = ProductionView(self.chapter_repo, self.asset_repo, self.settings)
+        self.production_view = ProductionView(
+            self.project_repo,
+            self.source_repo,
+            self.chapter_repo,
+            self.analysis_repo,
+            self.adaptation_repo,
+            self.asset_repo,
+            self.job_repo,
+            self.run_repo,
+            self.settings,
+        )
         self.library_view = LibraryView(self.settings)
 
         self.content_stack.addWidget(self.dashboard_view)        # 0

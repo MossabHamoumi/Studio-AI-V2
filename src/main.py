@@ -10,6 +10,8 @@ from src.repositories.adaptation_repo import AdaptationRepository
 from src.repositories.analysis_repo import AnalysisRepository
 from src.repositories.asset_repo import AssetRepository
 from src.repositories.chapter_repo import ChapterRepository
+from src.repositories.job_repo import JobRepository
+from src.repositories.production_run_repo import ProductionRunRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
 from src.repositories.source_repo import SourceRepository
@@ -45,6 +47,8 @@ def main():
     analysis_repo = AnalysisRepository(engine)
     adaptation_repo = AdaptationRepository(engine)
     asset_repo = AssetRepository(engine)
+    job_repo = JobRepository(engine)
+    run_repo = ProductionRunRepository(engine)
 
     workspace_mgr = WorkspaceManager(settings)
 
@@ -58,6 +62,8 @@ def main():
         analysis_repo,
         adaptation_repo,
         asset_repo,
+        job_repo,
+        run_repo,
         workspace_mgr,
     )
     window.show()

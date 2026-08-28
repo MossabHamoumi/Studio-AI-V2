@@ -1,12 +1,13 @@
 """Production Orchestrator View for PySide6 Desktop UI.
 
 Displays render pipeline progress, stage logs, System Doctor health summary,
-and QA report inspection.
+chapter selection controls, and QA report inspection.
 """
 
 from typing import Optional
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
+    QComboBox,
     QFormLayout,
     QGroupBox,
     QHBoxLayout,
@@ -19,10 +20,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from src.config.settings import AppSettings
-from src.domain.models import Project
+from src.domain.models import Chapter, Project
+from src.repositories.adaptation_repo import AdaptationRepository
+from src.repositories.analysis_repo import AnalysisRepository
 from src.repositories.asset_repo import AssetRepository
 from src.repositories.chapter_repo import ChapterRepository
-from src.services.render_pipeline import RenderPipeline
+from src.repositories.job_repo import JobRepository
+from src.repositories.production_run_repo import ProductionRunRepository
+from src.repositories.project_repo import ProjectRepository
+from src.repositories.source_repo import SourceRepository
+from src.services.production_orchestrator import ProductionOrchestrator
 from src.services.system_doctor import SystemDoctor
 
 
@@ -31,19 +38,43 @@ class ProductionView(QWidget):
 
     def __init__(
         self,
+        project_repo: ProjectRepository,
+        source_repo: SourceRepository,
         chapter_repo: ChapterRepository,
+        analysis_repo: AnalysisRepository,
+        adaptation_repo: AdaptationRepository,
         asset_repo: AssetRepository,
+        job_repo: JobRepository,
+        production_run_repo: ProductionRunRepository,
         settings: AppSettings,
         parent=None,
     ):
         super().__init__(parent)
+        self.project_repo = project_repo
+        self.source_repo = source_repo
         self.chapter_repo = chapter_repo
+        self.analysis_repo = analysis_repo
+        self.adaptation_repo = adaptation_repo
         self.asset_repo = asset_repo
+        self.job_repo = job_repo
+        self.run_repo = production_run_repo
         self.settings = settings
-        self.pipeline = RenderPipeline(settings, asset_repo)
+
+        self.orchestrator = ProductionOrchestrator(
+            settings,
+            project_repo,
+            source_repo,
+            chapter_repo,
+            analysis_repo,
+            adaptation_repo,
+            asset_repo,
+            job_repo,
+            production_run_repo,
+        )
         self.doctor = SystemDoctor(settings)
 
         self.active_project: Optional[Project] = None
+        self.chapters_list = []
 
         self.init_ui()
 
@@ -53,6 +84,21 @@ class ProductionView(QWidget):
         title = QLabel("Production Orchestrator")
         title.setStyleSheet("font-size: 22px; font-weight: bold;")
         layout.addWidget(title)
+
+        # Selection Controls Box
+        grp_controls = QGroupBox("Production Run Target Selection")
+        form_controls = QFormLayout(grp_controls)
+
+        self.cmb_scope = QComboBox()
+        self.cmb_scope.addItem("Selected Chapter Only")
+        self.cmb_scope.addItem("Entire Novel (All Chapters)")
+        self.cmb_scope.currentIndexChanged.connect(self.handle_scope_changed)
+
+        self.cmb_chapters = QComboBox()
+
+        form_controls.addRow("Production Scope:", self.cmb_scope)
+        form_controls.addRow("Target Chapter:", self.cmb_chapters)
+        layout.addWidget(grp_controls)
 
         # Progress Box
         grp_prog = QGroupBox("Active Render Run")
@@ -64,11 +110,11 @@ class ProductionView(QWidget):
         self.progress_bar.setValue(0)
 
         btn_box = QHBoxLayout()
-        btn_start_render = QPushButton("Start Production Render")
+        btn_start_render = QPushButton("Start Production Run")
         btn_start_render.setStyleSheet("background-color: #2e7d32; color: white; font-weight: bold; padding: 10px;")
         btn_start_render.clicked.connect(self.handle_start_render)
 
-        btn_cancel_render = QPushButton("Cancel Render")
+        btn_cancel_render = QPushButton("Cancel Production Run")
         btn_cancel_render.setStyleSheet("background-color: #c62828; color: white; font-weight: bold; padding: 10px;")
         btn_cancel_render.clicked.connect(self.handle_cancel_render)
 
@@ -121,6 +167,20 @@ class ProductionView(QWidget):
 
     def set_active_project(self, project: Project):
         self.active_project = project
+        self.reload_chapters()
+
+    def reload_chapters(self):
+        if not self.active_project:
+            return
+
+        self.chapters_list = self.chapter_repo.list_by_project(self.active_project.id)
+        self.cmb_chapters.clear()
+        for idx, ch in enumerate(self.chapters_list):
+            self.cmb_chapters.addItem(f"Chapter #{ch.sequence_index + 1}: {ch.title}", ch.id)
+
+    def handle_scope_changed(self, index: int):
+        # Disable chapter selector if "Entire Novel" selected
+        self.cmb_chapters.setEnabled(index == 0)
 
     def refresh_doctor_summary(self):
         checks = self.doctor.run_foundation_checks()
@@ -135,10 +195,43 @@ class ProductionView(QWidget):
             self.lbl_status.setText("Status: No active project selected")
             return
 
-        self.lbl_status.setText("Status: Ready to render (Select chapter in Visual/Subtitle view)")
-        self.txt_logs.append("Render pipeline ready. Complete stage orchestrator to be wired in Phase 8.")
+        if not self.chapters_list:
+            self.lbl_status.setText("Status: Project has no chapters")
+            return
+
+        is_entire_novel = self.cmb_scope.currentIndex() == 1
+
+        self.lbl_status.setText("Status: Starting Production Run...")
+        self.txt_logs.append(f"Initiating Production Run for project '{self.active_project.title}'...")
+
+        def _on_progress(stage: str, prog: float):
+            self.lbl_status.setText(f"Status: Stage {stage} ({int(prog * 100)}%)")
+            self.progress_bar.setValue(int(prog * 100))
+            self.txt_logs.append(f"Stage {stage}: {int(prog * 100)}%")
+
+        try:
+            if is_entire_novel:
+                self.orchestrator.run_novel_production(self.active_project.id)
+                self.lbl_status.setText("Status: ENTIRE NOVEL COMPLETED (QA PASS)")
+                self.txt_logs.append("Entire novel production run COMPLETED across all chapters.")
+            else:
+                selected_chapter_id = self.cmb_chapters.currentData()
+                if not selected_chapter_id and self.chapters_list:
+                    selected_chapter_id = self.chapters_list[0].id
+
+                run, out_file, qa_report = self.orchestrator.run_chapter_production(
+                    project_id=self.active_project.id,
+                    chapter_id=selected_chapter_id,
+                    progress_callback=_on_progress,
+                )
+                self.lbl_status.setText("Status: COMPLETED (QA PASS)")
+                self.txt_logs.append(f"Production Run COMPLETED. Output: {out_file}")
+                self.txt_qa.setPlainText(f"QA PASS: {out_file.name}\nResolution: {qa_report.measured_width}x{qa_report.measured_height}\nDuration: {qa_report.measured_duration_sec:.2f}s")
+        except Exception as e:
+            self.lbl_status.setText(f"Status: FAILED ({e})")
+            self.txt_logs.append(f"Production Run FAILED: {e}")
 
     def handle_cancel_render(self):
-        self.pipeline.cancel_render()
+        self.orchestrator.render_pipeline.cancel_render()
         self.lbl_status.setText("Status: CANCELLED")
         self.txt_logs.append("Render cancelled by user.")

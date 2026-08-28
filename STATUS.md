@@ -1,10 +1,10 @@
 # Studio-AI — Project Status
 
 **Repository:** `MossabHamoumi/Studio-AI`
-**Current Phase:** Phase 7 — Hardened FFmpeg Render Pipeline
+**Current Phase:** Phase 8 — Production Orchestrator + Durable Execution
 **Phase Status:** COMPLETED
-**Phase 8 Readiness:** YES
-**Last Updated:** Phase 7 Completion
+**Phase 9 Readiness:** YES
+**Last Updated:** Phase 8 Completion
 
 ---
 
@@ -12,7 +12,7 @@
 
 Studio-AI is undergoing a clean, ground-up rebuild as a **local-first AI story and media production studio** targeting desktop environments (Windows / Ryzen 5 PRO 5650U / 16 GB RAM).
 
-Phase 7 has delivered the **Hardened FFmpeg Render Pipeline**, featuring `RenderSpec` specifications, `FilterGraphBuilder` for static image scaling/motion, gameplay crop/scale, title card overlays, and ASS subtitle burn-in (`ass='path'`), `FFmpegCommandBuilder` with explicit stream mapping (`-map [v] -map [a]`), safe subprocess execution (`stdin=DEVNULL`, `-nostdin`, `-progress pipe:1`), safe cancellation support, `MediaQAValidator` probing video, audio, resolution, FPS, duration sync, generating `qa_report.json`, and the Production Orchestrator desktop UI.
+Phase 8 has delivered the **Production Orchestrator & Durable Execution Engine**, connecting all verified engine layers into a unified pipeline (`ANALYSIS -> ADAPTATION -> NARRATION -> SUBTITLES -> VISUALS -> RENDER -> QA`). Features single requested chapter processing, full novel sequential processing, strict chapter directory isolation (`chapters/NNN/`), pre-flight dependency checking, stage-level resume/retry, diagnostic bundle generation (`diagnostic_bundle_<run_id>.json`), and the Production Orchestrator PySide6 desktop UI.
 
 ---
 
@@ -43,7 +43,7 @@ Phase 7 has delivered the **Hardened FFmpeg Render Pipeline**, featuring `Render
 | **Phase 5** | Subtitle Engine | **COMPLETED** | Audio Timeline Subtitles, SubtitleValidator, ASS \an5 Presets, SRT, Line Wrapper, `PHASE_5_RESULT.md` |
 | **Phase 6** | Visual Engine | **COMPLETED** | Visual Modes, FFprobe Inspector, Asset Library, Gameplay Looping, Image Prompts, Title Cards, `PHASE_6_RESULT.md` |
 | **Phase 7** | Hardened FFmpeg Render Pipeline | **COMPLETED** | RenderSpec, FilterGraphBuilder, CommandBuilder, FFmpegRenderer, MediaQAValidator, `qa_report.json`, `PHASE_7_RESULT.md` |
-| **Phase 8** | Production Orchestrator | PLANNED | Stage Pipeline, Resume/Retry Engine, Chapter Isolation |
+| **Phase 8** | Production Orchestrator | **COMPLETED** | ProductionOrchestrator, PreflightChecker, DiagnosticBundleExporter, Chapter Isolation, `PHASE_8_RESULT.md` |
 | **Phase 9** | Creative Desktop UI | PLANNED | PySide6 Studio UI (Dashboard, Projects, Create, Workspace, Production, Library, Settings) |
 | **Phase 10** | Mandatory Windows Hardware Acceptance | PLANNED | Ryzen 5 PRO 5650U Execution Acceptance & Resource Profiling |
 | **Phase 11** | SearXNG + Docker + Story Discovery | PLANNED | Rights-Aware Story Discovery Ingestion |
@@ -53,7 +53,7 @@ Phase 7 has delivered the **Hardened FFmpeg Render Pipeline**, featuring `Render
 
 ## 4. Current Repository State
 
-- **Branch:** `rebuild/phase-7`
-- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, visual engine & asset library, hardened FFmpeg render pipeline, PySide6 UI views, test suite.
-- **Test Suite Status:** 41 passed, 0 failed (`python3 -m pytest -v`).
-- **Next Action:** Await approval / start Phase 8 (Production Orchestrator).
+- **Branch:** `rebuild/phase-8`
+- **Source Code:** Complete core domain, SQLite database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, visual engine & asset library, hardened FFmpeg render pipeline, production orchestrator, preflight checker, diagnostic exporter, PySide6 UI views, test suite.
+- **Test Suite Status:** 44 passed, 1 skipped (`python3 -m pytest -v`).
+- **Next Action:** Await approval / start Phase 9 (Creative Desktop UI).
