@@ -26,6 +26,7 @@ from src.services.workspace_manager import WorkspaceManager
 from src.ui.ai_view import AIView
 from src.ui.dashboard_view import DashboardView
 from src.ui.library_view import LibraryView
+from src.ui.production_view import ProductionView
 from src.ui.projects_view import ProjectsView
 from src.ui.subtitle_view import SubtitleView
 from src.ui.visual_view import VisualView
@@ -124,6 +125,7 @@ class MainWindow(QMainWindow):
         )
         self.subtitle_view = SubtitleView(self.chapter_repo, self.settings)
         self.visual_view = VisualView(self.asset_repo, self.chapter_repo, self.settings)
+        self.production_view = ProductionView(self.chapter_repo, self.asset_repo, self.settings)
         self.library_view = LibraryView(self.settings)
 
         self.content_stack.addWidget(self.dashboard_view)        # 0
@@ -133,7 +135,7 @@ class MainWindow(QMainWindow):
         self.content_stack.addWidget(self.ai_view)               # 4
         self.content_stack.addWidget(self.subtitle_view)         # 5
         self.content_stack.addWidget(self.visual_view)           # 6
-        self.content_stack.addWidget(PlaceholderView("Production Orchestrator")) # 7
+        self.content_stack.addWidget(self.production_view)       # 7
         self.content_stack.addWidget(self.library_view)          # 8
         self.content_stack.addWidget(PlaceholderView("Settings"))      # 9
 
@@ -166,3 +168,4 @@ class MainWindow(QMainWindow):
         self.ai_view.set_active_project(project)
         self.subtitle_view.set_active_project(project)
         self.visual_view.set_active_project(project)
+        self.production_view.set_active_project(project)

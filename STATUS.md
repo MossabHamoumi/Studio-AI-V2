@@ -1,10 +1,10 @@
 # Studio-AI — Project Status
 
 **Repository:** `MossabHamoumi/Studio-AI`
-**Current Phase:** Phase 6 — Visual Engine + Local Asset Library
+**Current Phase:** Phase 7 — Hardened FFmpeg Render Pipeline
 **Phase Status:** COMPLETED
-**Phase 7 Readiness:** YES
-**Last Updated:** Phase 6 Completion
+**Phase 8 Readiness:** YES
+**Last Updated:** Phase 7 Completion
 
 ---
 
@@ -12,7 +12,7 @@
 
 Studio-AI is undergoing a clean, ground-up rebuild as a **local-first AI story and media production studio** targeting desktop environments (Windows / Ryzen 5 PRO 5650U / 16 GB RAM).
 
-Phase 6 has delivered the **Visual Engine & Local Asset Library**, featuring visual mode selection (`STATIC_IMAGE`, `MULTI_IMAGE`, `GAMEPLAY`, `MIXED`, `NONE`), format profile specifications (`16:9`, `9:16`, `1:1`), FFprobe media metadata extraction, missing asset recovery without crashing (`MISSING`), static image scaling & motion effects, editable AI image prompt generation, multi-image segment transitions, gameplay video looping calculations (with muted audio by default), title card specifications, and the Visual Studio desktop UI.
+Phase 7 has delivered the **Hardened FFmpeg Render Pipeline**, featuring `RenderSpec` specifications, `FilterGraphBuilder` for static image scaling/motion, gameplay crop/scale, title card overlays, and ASS subtitle burn-in (`ass='path'`), `FFmpegCommandBuilder` with explicit stream mapping (`-map [v] -map [a]`), safe subprocess execution (`stdin=DEVNULL`, `-nostdin`, `-progress pipe:1`), safe cancellation support, `MediaQAValidator` probing video, audio, resolution, FPS, duration sync, generating `qa_report.json`, and the Production Orchestrator desktop UI.
 
 ---
 
@@ -42,7 +42,7 @@ Phase 6 has delivered the **Visual Engine & Local Asset Library**, featuring vis
 | **Phase 4** | Real TTS + Narration | **COMPLETED** | Kokoro Primary + Piper Fallback, Audio Validator, Chunker, Cache, Timeline, Voice Library, `PHASE_4_RESULT.md` |
 | **Phase 5** | Subtitle Engine | **COMPLETED** | Audio Timeline Subtitles, SubtitleValidator, ASS \an5 Presets, SRT, Line Wrapper, `PHASE_5_RESULT.md` |
 | **Phase 6** | Visual Engine | **COMPLETED** | Visual Modes, FFprobe Inspector, Asset Library, Gameplay Looping, Image Prompts, Title Cards, `PHASE_6_RESULT.md` |
-| **Phase 7** | Hardened FFmpeg Render Pipeline | PLANNED | RenderSpec, FilterGraph, FFmpegCommand, Media QA |
+| **Phase 7** | Hardened FFmpeg Render Pipeline | **COMPLETED** | RenderSpec, FilterGraphBuilder, CommandBuilder, FFmpegRenderer, MediaQAValidator, `qa_report.json`, `PHASE_7_RESULT.md` |
 | **Phase 8** | Production Orchestrator | PLANNED | Stage Pipeline, Resume/Retry Engine, Chapter Isolation |
 | **Phase 9** | Creative Desktop UI | PLANNED | PySide6 Studio UI (Dashboard, Projects, Create, Workspace, Production, Library, Settings) |
 | **Phase 10** | Mandatory Windows Hardware Acceptance | PLANNED | Ryzen 5 PRO 5650U Execution Acceptance & Resource Profiling |
@@ -53,7 +53,7 @@ Phase 6 has delivered the **Visual Engine & Local Asset Library**, featuring vis
 
 ## 4. Current Repository State
 
-- **Branch:** `rebuild/phase-6`
-- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, visual engine & asset library, PySide6 UI views, test suite.
-- **Test Suite Status:** 37 passed, 0 failed (`python3 -m pytest -v`).
-- **Next Action:** Await approval / start Phase 7 (Hardened FFmpeg Render Pipeline).
+- **Branch:** `rebuild/phase-7`
+- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, visual engine & asset library, hardened FFmpeg render pipeline, PySide6 UI views, test suite.
+- **Test Suite Status:** 41 passed, 0 failed (`python3 -m pytest -v`).
+- **Next Action:** Await approval / start Phase 8 (Production Orchestrator).
