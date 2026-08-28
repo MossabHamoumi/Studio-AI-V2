@@ -41,6 +41,7 @@ python -m pytest -v
 - `PHASE_6_RESULT.md`: Phase 6 Visual Engine & Local Asset Library implementation and test results.
 - `PHASE_7_RESULT.md`: Phase 7 Hardened FFmpeg Render Pipeline implementation and test results.
 - `PHASE_8_RESULT.md`: Phase 8 Production Orchestrator implementation and test results.
+- `PHASE_8_FULL_SYSTEM_ACCEPTANCE.md`: Phase 8 Full System Acceptance & 20 Historical Failure Regressions Report.
 - `ARCHITECTURE.md`: Master pipeline and system design.
 
 ## Rebuild Roadmap
@@ -53,7 +54,7 @@ python -m pytest -v
 6. **Phase 5:** Subtitle Engine (COMPLETED)
 7. **Phase 6:** Visual Engine (COMPLETED)
 8. **Phase 7:** Hardened FFmpeg Render Pipeline (COMPLETED)
-9. **Phase 8:** Production Orchestrator (COMPLETED)
+9. **Phase 8:** Production Orchestrator & Full System Acceptance (COMPLETED)
 10. **Phase 9:** Creative Desktop UI (PLANNED)
 11. **Phase 10:** Mandatory Windows Hardware Acceptance (PLANNED)
 12. **Phase 11:** SearXNG + Docker + Story Discovery (PLANNED)

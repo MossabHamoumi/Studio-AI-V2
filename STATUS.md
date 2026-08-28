@@ -1,10 +1,10 @@
 # Studio-AI — Project Status
 
 **Repository:** `MossabHamoumi/Studio-AI`
-**Current Phase:** Phase 8 — Production Orchestrator + Durable Execution
+**Current Phase:** Phase 8 Full System Acceptance & Regression Audit
 **Phase Status:** COMPLETED
 **Phase 9 Readiness:** YES
-**Last Updated:** Phase 8 Completion
+**Last Updated:** Phase 8 Full System Acceptance Baseline
 
 ---
 
@@ -12,7 +12,7 @@
 
 Studio-AI is undergoing a clean, ground-up rebuild as a **local-first AI story and media production studio** targeting desktop environments (Windows / Ryzen 5 PRO 5650U / 16 GB RAM).
 
-Phase 8 has delivered the **Production Orchestrator & Durable Execution Engine**, connecting all verified engine layers into a unified pipeline (`ANALYSIS -> ADAPTATION -> NARRATION -> SUBTITLES -> VISUALS -> RENDER -> QA`). Features single requested chapter processing, full novel sequential processing, strict chapter directory isolation (`chapters/NNN/`), pre-flight dependency checking, stage-level resume/retry, diagnostic bundle generation (`diagnostic_bundle_<run_id>.json`), and the Production Orchestrator PySide6 desktop UI.
+Phase 8 Full System Acceptance & Regression Audit has confirmed that all core subsystems through Phase 8 (Durable Core, Universal Content Engine, Local AI Ollama Layer, Real Neural TTS Engine, Audio-Driven Subtitles, Visual Engine & Asset Library, Hardened FFmpeg Render Pipeline, and Production Orchestrator) are fully implemented, integrated, and protected against all 20 historical failure regressions across 50 automated tests.
 
 ---
 
@@ -43,7 +43,7 @@ Phase 8 has delivered the **Production Orchestrator & Durable Execution Engine**
 | **Phase 5** | Subtitle Engine | **COMPLETED** | Audio Timeline Subtitles, SubtitleValidator, ASS \an5 Presets, SRT, Line Wrapper, `PHASE_5_RESULT.md` |
 | **Phase 6** | Visual Engine | **COMPLETED** | Visual Modes, FFprobe Inspector, Asset Library, Gameplay Looping, Image Prompts, Title Cards, `PHASE_6_RESULT.md` |
 | **Phase 7** | Hardened FFmpeg Render Pipeline | **COMPLETED** | RenderSpec, FilterGraphBuilder, CommandBuilder, FFmpegRenderer, MediaQAValidator, `qa_report.json`, `PHASE_7_RESULT.md` |
-| **Phase 8** | Production Orchestrator | **COMPLETED** | ProductionOrchestrator, PreflightChecker, DiagnosticBundleExporter, Chapter Isolation, `PHASE_8_RESULT.md` |
+| **Phase 8** | Production Orchestrator & Full System Acceptance | **COMPLETED** | ProductionOrchestrator, PreflightChecker, DiagnosticBundleExporter, 20 Regressions Test, `PHASE_8_FULL_SYSTEM_ACCEPTANCE.md` |
 | **Phase 9** | Creative Desktop UI | PLANNED | PySide6 Studio UI (Dashboard, Projects, Create, Workspace, Production, Library, Settings) |
 | **Phase 10** | Mandatory Windows Hardware Acceptance | PLANNED | Ryzen 5 PRO 5650U Execution Acceptance & Resource Profiling |
 | **Phase 11** | SearXNG + Docker + Story Discovery | PLANNED | Rights-Aware Story Discovery Ingestion |
@@ -54,6 +54,6 @@ Phase 8 has delivered the **Production Orchestrator & Durable Execution Engine**
 ## 4. Current Repository State
 
 - **Branch:** `rebuild/phase-8`
-- **Source Code:** Complete core domain, SQLite database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, visual engine & asset library, hardened FFmpeg render pipeline, production orchestrator, preflight checker, diagnostic exporter, PySide6 UI views, test suite.
-- **Test Suite Status:** 44 passed, 1 skipped (`python3 -m pytest -v`).
+- **Source Code:** Core domain, database engine, repositories, workspace manager, system doctor, universal content engine, Ollama local AI layer, Kokoro/Piper TTS engine, audio-driven subtitle engine, visual engine & asset library, hardened FFmpeg render pipeline, production orchestrator, preflight checker, diagnostic exporter, PySide6 UI views, test suite.
+- **Test Suite Status:** 49 passed, 1 skipped (`python3 -m pytest -v`).
 - **Next Action:** Await approval / start Phase 9 (Creative Desktop UI).
