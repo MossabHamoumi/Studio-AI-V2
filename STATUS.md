@@ -1,10 +1,10 @@
 # Studio-AI — Project Status
 
 **Repository:** `MossabHamoumi/Studio-AI`
-**Current Phase:** Blocking Startup Dependency Repair & Windows Readiness
+**Current Phase:** GUI Startup Contract Repair & Constructor Audit
 **Phase Status:** COMPLETED
 **Next Phase Readiness:** YES
-**Last Updated:** Startup Dependency Repair Baseline
+**Last Updated:** GUI Startup Contract Repair Baseline
 
 ---
 
@@ -12,31 +12,25 @@
 
 Studio-AI is undergoing a clean, ground-up rebuild as a **local-first AI story and media production studio** targeting desktop environments (Windows / Ryzen 5 PRO 5650U / 16 GB RAM).
 
-A blocking startup repair was executed on the desktop GUI application. The constructor dependency ordering mismatch in `ProductionOrchestrator` (`AppSettings` replaced by `ProjectRepository`) was resolved by enforcing explicit keyword arguments across `MainWindow` and `ProductionView` instantiations, and adding runtime `isinstance(settings, AppSettings)` type validation. All 50 unit and integration tests compile cleanly and pass without errors.
+A constructor contract audit was performed across all application views and core services. The parameter mismatch in `ProjectsView` (`on_project_activated` keyword vs `on_project_selected` parameter) was resolved. All 10 views (`DashboardView`, `ProjectsView`, `CreateWizardView`, `WorkspaceView`, `AIView`, `SubtitleView`, `VisualView`, `ProductionView`, `LibraryView`, `Settings`) and core services (`ProductionOrchestrator`, `PreflightChecker`, `FallbackTTSManager`, etc.) were audited and verified to pass explicit keyword arguments cleanly.
 
 ---
 
-## 2. Startup Dependency Fix Report
+## 2. GUI Startup Contract Audit Matrix
 
-### Root Cause
-`ProductionOrchestrator.__init__` expects `settings: AppSettings` as its first argument. In `src/ui/main_window.py`, arguments were passed positionally in the wrong order (`project_repo` passed first, `settings` passed last), causing `self.settings` to hold a `ProjectRepository` object. When `PreflightChecker` initialized `FallbackTTSManager(settings)`, `setup_tts_logger` attempted to read `settings.logs_dir` and raised `AttributeError: 'ProjectRepository' object has no attribute 'logs_dir'`.
-
-### Fix Applied
-1. Updated `MainWindow` (`src/ui/main_window.py`) and `ProductionView` (`src/ui/production_view.py`) to use explicit keyword arguments when instantiating `ProductionOrchestrator` and all child views (`DashboardView`, `ProjectsView`, `CreateWizardView`, `WorkspaceView`, `AIView`, `SubtitleView`, `VisualView`, `ProductionView`, `LibraryView`).
-2. Added runtime type checks in `ProductionOrchestrator.__init__` ensuring `isinstance(settings, AppSettings)` and `isinstance(project_repo, ProjectRepository)`, raising a clear `TypeError` if invalid objects are passed.
-3. Added `test_startup_dependency_graph_regression` in `tests/test_gui.py` to assert that passing `ProjectRepository` as `settings` raises a `TypeError`, and passing valid `AppSettings` initializes `ProductionOrchestrator` successfully.
-
-### Status Matrix
-
-| Component / Verification | Status | Evidence / Result |
-|---|---|---|
-| `ProductionOrchestrator` Constructor | **PASS** | `isinstance(settings, AppSettings)` validation enforced |
-| `MainWindow` Instantiation | **PASS** | Initializes all 10 views without `TypeError` or `AttributeError` |
-| `SystemDoctor` CLI (`--doctor`) | **PASS** | Runs independently, reports status without constructing GUI graph |
-| GUI Application Launch (`src.main`) | **PASS** | Launches `MainWindow` cleanly without traceback |
-| Offscreen GUI Test Suite (`QT_QPA_PLATFORM=offscreen`) | **PASS** | 50 collected, 49 passed, 1 skipped (missing FFmpeg CLI in sandbox) |
-| Kokoro ONNX Model Probing | **NOT READY** | Probes path `C:\Users\hp\.studio-ai\models\kokoro\kokoro-v0_19.onnx` (missing) |
-| Piper TTS Model Probing | **NOT READY** | Probes path `C:\Users\hp\.studio-ai\models\piper` (missing) |
+| Class / Component | Expected Constructor Parameters | MainWindow Instantiation Status | Verification Result |
+|---|---|---|---|
+| `MainWindow` | `settings, db_engine, project_repo, source_repo, chapter_repo, section_repo, analysis_repo, adaptation_repo, asset_repo, job_repo, production_run_repo, workspace_mgr` | **PASS** | Instantiates without errors |
+| `DashboardView` | `project_repo` | **PASS** | Validated in offscreen smoke test |
+| `ProjectsView` | `project_repo, workspace_mgr, on_project_selected` | **PASS** | Fixed keyword mismatch (`on_project_selected=self.on_project_activated`) |
+| `CreateWizardView` | `session_ctx, project_repo, source_repo, chapter_repo, section_repo, workspace_mgr, orchestrator, settings, on_navigate_stage` | **PASS** | Validated in offscreen smoke test |
+| `WorkspaceView` | `source_repo, chapter_repo, section_repo, session_ctx, on_navigate_stage` | **PASS** | Validated in offscreen smoke test |
+| `AIView` | `analysis_repo, adaptation_repo, chapter_repo, settings` | **PASS** | Validated in offscreen smoke test |
+| `SubtitleView` | `chapter_repo, settings` | **PASS** | Validated in offscreen smoke test |
+| `VisualView` | `asset_repo, chapter_repo, settings` | **PASS** | Validated in offscreen smoke test |
+| `ProductionView` | `project_repo, source_repo, chapter_repo, analysis_repo, adaptation_repo, asset_repo, job_repo, production_run_repo, settings` | **PASS** | Validated in offscreen smoke test |
+| `LibraryView` | `settings` | **PASS** | Validated in offscreen smoke test |
+| `ProductionOrchestrator` | `settings, project_repo, source_repo, chapter_repo, analysis_repo, adaptation_repo, asset_repo, job_repo, production_run_repo` | **PASS** | Enforces `isinstance(settings, AppSettings)` type validation |
 
 ---
 
@@ -68,7 +62,7 @@ A blocking startup repair was executed on the desktop GUI application. The const
 | **Phase 6** | Visual Engine | **COMPLETED** | Visual Modes, FFprobe Inspector, Asset Library, Gameplay Looping, Image Prompts, Title Cards, `PHASE_6_RESULT.md` |
 | **Phase 7** | Hardened FFmpeg Render Pipeline | **COMPLETED** | RenderSpec, FilterGraphBuilder, CommandBuilder, FFmpegRenderer, MediaQAValidator, `qa_report.json`, `PHASE_7_RESULT.md` |
 | **Phase 8** | Production Orchestrator & Full System Acceptance | **COMPLETED** | ProductionOrchestrator, PreflightChecker, DiagnosticBundleExporter, 20 Regressions Test, `PHASE_8_FULL_SYSTEM_ACCEPTANCE.md` |
-| **Startup Fix** | Blocking Desktop GUI Startup Repair | **COMPLETED** | Explicit keyword arguments, `isinstance` checks, `test_startup_dependency_graph_regression` |
+| **Contract Repair** | GUI Startup Contract Repair & Constructor Audit | **COMPLETED** | Explicit keyword arguments, `on_project_selected` callback alignment, view construction smoke tests |
 | **Phase 9** | Creative Desktop UI | PLANNED | PySide6 Studio UI (Dashboard, Projects, Create, Workspace, Production, Library, Settings) |
 | **Phase 10** | Mandatory Windows Hardware Acceptance | PLANNED | Ryzen 5 PRO 5650U Execution Acceptance & Resource Profiling |
 | **Phase 11** | SearXNG + Docker + Story Discovery | PLANNED | Rights-Aware Story Discovery Ingestion |

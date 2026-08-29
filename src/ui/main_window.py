@@ -144,7 +144,7 @@ class MainWindow(QMainWindow):
         self.projects_view = ProjectsView(
             project_repo=self.project_repo,
             workspace_mgr=self.workspace_mgr,
-            on_project_activated=self.on_project_activated,
+            on_project_selected=self.on_project_activated,
         )
         self.create_wizard_view = CreateWizardView(
             session_ctx=self.session_ctx,
