@@ -61,15 +61,15 @@ class ProductionView(QWidget):
         self.settings = settings
 
         self.orchestrator = ProductionOrchestrator(
-            settings,
-            project_repo,
-            source_repo,
-            chapter_repo,
-            analysis_repo,
-            adaptation_repo,
-            asset_repo,
-            job_repo,
-            production_run_repo,
+            settings=settings,
+            project_repo=project_repo,
+            source_repo=source_repo,
+            chapter_repo=chapter_repo,
+            analysis_repo=analysis_repo,
+            adaptation_repo=adaptation_repo,
+            asset_repo=asset_repo,
+            job_repo=job_repo,
+            production_run_repo=production_run_repo,
         )
         self.doctor = SystemDoctor(settings)
 

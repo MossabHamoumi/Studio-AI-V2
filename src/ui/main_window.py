@@ -84,15 +84,15 @@ class MainWindow(QMainWindow):
 
         self.session_ctx = SessionContext()
         self.orchestrator = ProductionOrchestrator(
-            project_repo,
-            source_repo,
-            chapter_repo,
-            analysis_repo,
-            adaptation_repo,
-            asset_repo,
-            job_repo,
-            production_run_repo,
-            settings,
+            settings=settings,
+            project_repo=project_repo,
+            source_repo=source_repo,
+            chapter_repo=chapter_repo,
+            analysis_repo=analysis_repo,
+            adaptation_repo=adaptation_repo,
+            asset_repo=asset_repo,
+            job_repo=job_repo,
+            production_run_repo=production_run_repo,
         )
         self.active_project: Optional[Project] = None
 
@@ -140,45 +140,57 @@ class MainWindow(QMainWindow):
         # Content Stack
         self.content_stack = QStackedWidget()
 
-        self.dashboard_view = DashboardView(self.project_repo)
+        self.dashboard_view = DashboardView(project_repo=self.project_repo)
         self.projects_view = ProjectsView(
-            self.project_repo, self.workspace_mgr, self.on_project_activated
+            project_repo=self.project_repo,
+            workspace_mgr=self.workspace_mgr,
+            on_project_activated=self.on_project_activated,
         )
         self.create_wizard_view = CreateWizardView(
-            self.session_ctx,
-            self.project_repo,
-            self.source_repo,
-            self.chapter_repo,
-            self.section_repo,
-            self.workspace_mgr,
-            self.orchestrator,
-            self.settings,
+            session_ctx=self.session_ctx,
+            project_repo=self.project_repo,
+            source_repo=self.source_repo,
+            chapter_repo=self.chapter_repo,
+            section_repo=self.section_repo,
+            workspace_mgr=self.workspace_mgr,
+            orchestrator=self.orchestrator,
+            settings=self.settings,
             on_navigate_stage=self.navigate_to_stage,
         )
         self.workspace_view = WorkspaceView(
-            self.source_repo,
-            self.chapter_repo,
-            self.section_repo,
-            self.session_ctx,
+            source_repo=self.source_repo,
+            chapter_repo=self.chapter_repo,
+            section_repo=self.section_repo,
+            session_ctx=self.session_ctx,
             on_navigate_stage=self.navigate_to_stage,
         )
         self.ai_view = AIView(
-            self.analysis_repo, self.adaptation_repo, self.chapter_repo, self.settings
+            analysis_repo=self.analysis_repo,
+            adaptation_repo=self.adaptation_repo,
+            chapter_repo=self.chapter_repo,
+            settings=self.settings,
         )
-        self.subtitle_view = SubtitleView(self.chapter_repo, self.settings)
-        self.visual_view = VisualView(self.asset_repo, self.chapter_repo, self.settings)
+        self.subtitle_view = SubtitleView(
+            chapter_repo=self.chapter_repo,
+            settings=self.settings,
+        )
+        self.visual_view = VisualView(
+            asset_repo=self.asset_repo,
+            chapter_repo=self.chapter_repo,
+            settings=self.settings,
+        )
         self.production_view = ProductionView(
-            self.project_repo,
-            self.source_repo,
-            self.chapter_repo,
-            self.analysis_repo,
-            self.adaptation_repo,
-            self.asset_repo,
-            self.job_repo,
-            self.run_repo,
-            self.settings,
+            project_repo=self.project_repo,
+            source_repo=self.source_repo,
+            chapter_repo=self.chapter_repo,
+            analysis_repo=self.analysis_repo,
+            adaptation_repo=self.adaptation_repo,
+            asset_repo=self.asset_repo,
+            job_repo=self.job_repo,
+            production_run_repo=self.run_repo,
+            settings=self.settings,
         )
-        self.library_view = LibraryView(self.settings)
+        self.library_view = LibraryView(settings=self.settings)
 
         self.content_stack.addWidget(self.dashboard_view)        # 0
         self.content_stack.addWidget(self.projects_view)         # 1

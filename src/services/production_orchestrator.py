@@ -63,6 +63,17 @@ class ProductionOrchestrator:
         job_repo: JobRepository,
         production_run_repo: ProductionRunRepository,
     ):
+        if not isinstance(settings, AppSettings):
+            actual_type = type(settings).__name__
+            raise TypeError(
+                f"ProductionOrchestrator constructor error: 'settings' argument must be an AppSettings instance, "
+                f"got '{actual_type}'. Please check constructor parameter order."
+            )
+        if not isinstance(project_repo, ProjectRepository):
+            raise TypeError(
+                f"ProductionOrchestrator constructor error: 'project_repo' must be a ProjectRepository instance, got '{type(project_repo).__name__}'."
+            )
+
         self.settings = settings
         self.project_repo = project_repo
         self.source_repo = source_repo

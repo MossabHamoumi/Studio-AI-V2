@@ -18,6 +18,7 @@ from src.repositories.production_run_repo import ProductionRunRepository
 from src.repositories.project_repo import ProjectRepository
 from src.repositories.section_repo import SectionRepository
 from src.repositories.source_repo import SourceRepository
+from src.services.production_orchestrator import ProductionOrchestrator
 from src.services.workspace_manager import WorkspaceManager
 from src.ui.main_window import MainWindow
 
@@ -76,4 +77,51 @@ def test_main_window_launch_and_project_activation(qapp, tmp_path: Path):
     window.close()
     window.deleteLater()
     QCoreApplication.processEvents()
+    engine.close()
+
+
+def test_startup_dependency_graph_regression(tmp_path: Path):
+    """Regression test ensuring MainWindow and ProductionOrchestrator receive AppSettings properly."""
+    settings = AppSettings(workspace_dir=tmp_path)
+    engine = DatabaseEngine(settings.db_path)
+    MigrationRunner(engine).apply_migrations()
+
+    proj_repo = ProjectRepository(engine)
+    source_repo = SourceRepository(engine)
+    chapter_repo = ChapterRepository(engine)
+    section_repo = SectionRepository(engine)
+    analysis_repo = AnalysisRepository(engine)
+    adaptation_repo = AdaptationRepository(engine)
+    asset_repo = AssetRepository(engine)
+    job_repo = JobRepository(engine)
+    run_repo = ProductionRunRepository(engine)
+
+    # Verify ProductionOrchestrator throws TypeError if settings is accidentally a ProjectRepository
+    with pytest.raises(TypeError, match="must be an AppSettings instance"):
+        ProductionOrchestrator(
+            settings=proj_repo,  # Wrong object passed as settings!
+            project_repo=proj_repo,
+            source_repo=source_repo,
+            chapter_repo=chapter_repo,
+            analysis_repo=analysis_repo,
+            adaptation_repo=adaptation_repo,
+            asset_repo=asset_repo,
+            job_repo=job_repo,
+            production_run_repo=run_repo,
+        )
+
+    # Verify valid ProductionOrchestrator construction with AppSettings
+    orchestrator = ProductionOrchestrator(
+        settings=settings,
+        project_repo=proj_repo,
+        source_repo=source_repo,
+        chapter_repo=chapter_repo,
+        analysis_repo=analysis_repo,
+        adaptation_repo=adaptation_repo,
+        asset_repo=asset_repo,
+        job_repo=job_repo,
+        production_run_repo=run_repo,
+    )
+    assert orchestrator.settings == settings
+    assert hasattr(orchestrator.settings, "logs_dir")
     engine.close()
